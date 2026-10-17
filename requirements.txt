@@ -1,0 +1,3 @@
+skia-python
+numpy
+scipy
