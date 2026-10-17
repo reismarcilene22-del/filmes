@@ -1,4 +1,4 @@
-"""Teste do acabamento escolhido: grao + vinheta + faixas de cinema + brilho neon + traco tremidinho."""
+"""Teste do acabamento escolhido: vinheta + brilho neon (sem grao, sem faixas, sem traco tremidinho)."""
 import subprocess, numpy as np, skia
 from scipy.ndimage import gaussian_filter
 import personagem as pg
@@ -10,8 +10,7 @@ FONT = 'Comic Neue'
 
 def boil(frame):
     # the outline is re-drawn slightly differently every 3 frames
-    return skia.PathEffect.MakeCompose(skia.CornerPathEffect.Make(6),
-                                       skia.DiscretePathEffect.Make(14, 1.6, frame // 3))
+    return None  # traco tremidinho desligado
 
 def desenha(frame):
     t = frame / FPS
@@ -47,17 +46,15 @@ BARRA = int(H * 0.09)
 def acabamento(a, frame):
     a = a + gaussian_filter(np.clip(a - 160, 0, None), sigma=(28, 28, 0))          # brilho neon
     a = a * VINHETA                                                               # vinheta
-    a = a + np.random.default_rng(frame).normal(0, 255 * 0.04, (H, W))[:, :, None]  # grao (muda a cada quadro)
-    a[:BARRA] = 0; a[-BARRA:] = 0                                                 # faixas de cinema
     return np.clip(a, 0, 255).astype(np.uint8)
 
 if __name__ == "__main__":
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
-                           "-i", "-", "-c:v", "libx264", "-crf", "17", "-pix_fmt", "yuv420p", "6_acabamento_teste.mp4"], stdin=subprocess.PIPE)
+                           "-i", "-", "-c:v", "libx264", "-crf", "17", "-pix_fmt", "yuv420p", "6_acabamento_final.mp4"], stdin=subprocess.PIPE)
     for fr in range(FPS * SEG):
         img = acabamento(desenha(fr), fr)
         ff.stdin.write(img.tobytes())
         if fr == 75:
             rgba = np.dstack([img, np.full((H, W), 255, np.uint8)])
-            skia.Image.fromarray(rgba, colorType=skia.kRGBA_8888_ColorType).save("6_acabamento_teste.png", skia.kPNG)
+            skia.Image.fromarray(rgba, colorType=skia.kRGBA_8888_ColorType).save("6_acabamento_final.png", skia.kPNG)
     ff.stdin.close(); ff.wait()
