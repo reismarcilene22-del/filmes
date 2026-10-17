@@ -44,6 +44,8 @@ class Pose:
     piscar: float = 0.0               # 0 aberto, 1 fechado
     lagrima: float = 0.0              # 0..1, usar uma vez so
     cor: tuple = CREME
+    joelhos: int = 0                  # 0 = abrem para os lados (de frente); +1/-1 = apontam para direita/esquerda (andando)
+    maos_livres: bool = False         # True: maos soltas (caminhada), nao checar contato
     contorno: tuple = LILAS
 
 
@@ -88,7 +90,7 @@ def _membro(c, raiz, alvo, padrao, l1, l2, dobra, grossura, cor, nome, ponta_rai
         meio, ponta, falta = a if a[0][1] >= b[0][1] else b
     else:
         meio, ponta, falta = alcance(raiz, alvo, l1, l2, dobra)
-    if checar and falta > TOLERANCIA:
+    if checar and nome and falta > TOLERANCIA:
         FALHAS.append((ROTULO[0], nome, round(falta, 1)))
     path = skia.Path()
     path.moveTo(*raiz); path.lineTo(*meio); path.lineTo(*ponta)
@@ -161,7 +163,7 @@ def desenha(c, p: Pose):
     for lado, alvo, nome in ((-1, p.pe_esq, 'pe esquerdo'), (1, p.pe_dir, 'pe direito')):
         quadril = pt['quadril_esq' if lado < 0 else 'quadril_dir']
         padrao = (quadril[0] + lado * p.agachar * 0.4, p.chao)
-        _membro(c, quadril, alvo, padrao, PERNA[0] * s, PERNA[1] * s, -lado, GROSSURA_PERNA * s,
+        _membro(c, quadril, alvo, padrao, PERNA[0] * s, PERNA[1] * s, -p.joelhos if p.joelhos else -lado, GROSSURA_PERNA * s,
                 p.cor, nome, 0)
 
     # corpo
@@ -174,6 +176,8 @@ def desenha(c, p: Pose):
     for lado, alvo, nome in ((-1, p.mao_esq, 'mao esquerda'), (1, p.mao_dir, 'mao direita')):
         ombro = pt['ombro_esq' if lado < 0 else 'ombro_dir']
         padrao = (ombro[0] + lado * 24 * s, ombro[1] + 146 * s)
+        if p.maos_livres:
+            nome = None
         _membro(c, ombro, alvo, padrao, BRACO[0] * s, BRACO[1] * s, 0, GROSSURA_BRACO * s,
                 p.cor, nome, 13 * s)
     # cabeca
@@ -182,3 +186,45 @@ def desenha(c, p: Pose):
     _rosto(c, hx, hy, s, p)
 
     c.restore()
+
+
+def mao_solta(p: Pose, lado):
+    """Onde a mao fica com o braco solto (lado -1 esquerda, +1 direita)."""
+    s = p.escala
+    ombro = pontos(p)['ombro_esq' if lado < 0 else 'ombro_dir']
+    return (ombro[0] + lado * 24 * s, ombro[1] + 146 * s)
+
+
+def caminhar(p: Pose, distancia, passo=70, levanta=22, balanco=26, intensidade=1.0):
+    """Coloca pes e maos numa caminhada. `distancia` = quanto ele ja andou (px, cresce para a direita).
+    O pe de apoio fica parado no chao enquanto o corpo passa: o pe nunca escorrega.
+    intensidade: 1 = andando, 0 = parado (use para comecar e terminar a caminhada sem pulo)."""
+    s = p.escala
+    L = passo * s
+    perna = (PERNA[0] + PERNA[1]) * s
+    pes = []
+    for lado, offset in ((-1, 0.0), (1, L)):
+        u = (distancia + offset) % (2 * L)
+        if u < L:                       # apoio: pe no chao, indo para tras em relacao ao corpo
+            rel, y = L / 2 - u, 0.0
+        else:                           # balanco: pe no ar, indo para a frente
+            rel = u - 1.5 * L
+            y = -math.sin(math.pi * (u - L) / L) * levanta * s
+        pes.append((lado, rel * intensidade, y * intensidade))
+    # o quadril desce o suficiente para a perna de apoio alcancar o chao (mais 1 px de folga)
+    precisa = max(perna - math.sqrt(max(perna * perna - rel * rel, 0)) for _, rel, y in pes if y == 0) if any(y == 0 for _, _, y in pes) else 0
+    p.agachar = max(p.agachar, precisa + 1.0 * s * intensidade)
+    pt = pontos(p)
+    for lado, rel, y in pes:
+        quadril = pt['quadril_esq' if lado < 0 else 'quadril_dir']
+        alvo = (quadril[0] + rel, p.chao + y)
+        if lado < 0: p.pe_esq = alvo
+        else: p.pe_dir = alvo
+        # bracos balancam ao contrario das pernas
+        mx, my = mao_solta(p, lado)
+        alvo_mao = (mx - rel * balanco / (L / 2) * 0.9, my - abs(rel) * 0.15)
+        if lado < 0: p.mao_esq = alvo_mao
+        else: p.mao_dir = alvo_mao
+    p.maos_livres = True
+    p.joelhos = 1 if passo > 0 else -1   # joelho aponta para onde ele anda
+    return p
