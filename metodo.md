@@ -27,3 +27,9 @@ Os passos de todo filme, as conferências que sempre fazemos e cada erro que já
 - `skia` devolve as cores em ordem BGRA por padrão: ao converter para numpy, usar `toarray(colorType=skia.kRGBA_8888_ColorType)`, senão vermelho vira azul.
 - O brilho neon (desfoque em 1080p) é a parte mais lenta do render. Grão de filme deixa o vídeo enorme (50 MB para 4 s) — por isso foi descartado.
 - O efeito de traço tremidinho também deforma as letras; se voltar a ser usado, não aplicar em texto.
+- Na caminhada, a perna aberta não alcança o chão se o quadril não descer: `caminhar` já calcula isso (a checagem de contato pegou).
+- Joelhos: de frente abrem para os lados; andando apontam para onde ele vai (`Pose.joelhos`).
+- O braço erguido passa por trás da cabeça, nunca na frente do rosto.
+- Folha de contato do mp4: o último quadro existe em `fim - 1/30`, não em `fim`.
+- Cada filme define `desenhar(c, t)` e um dicionário de TEMPOS; imagem e som leem os mesmos números (os passos saem da mesma função de posição).
+- Render: ~5 s por segundo de filme nas 4 CPUs desta máquina.

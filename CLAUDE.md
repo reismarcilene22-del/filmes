@@ -15,7 +15,13 @@ A dona do projeto não é programadora e fala português: explicar tudo em palav
 
 ## Situação atual
 - Questionário de estilo concluído (rascunhos e escolhas em `questionario/`).
-- Próximo passo: o prompt de fundação — personagem com braços, expressões, câmera, legendas, acabamento, render em paralelo, folha de contato, kit de som e checagem de contato.
+- Fundação pronta em `toolkit/` (testes e exemplos em `toolkit/testes/`, a cena `t3_demo.py` mostra como tudo se encaixa):
+  - `desenho.py` — paleta, letra, pincéis, suavizações (`suave`, `mola`, `entre`)
+  - `personagem.py` — `Pose`, `desenha`, `caminhar`, `mao_solta`; mãos/pés vão a pontos exatos e as faltas vão para `FALHAS`
+  - `cena.py` — fundo neon, placas, `letreiro` (vilão), `legenda`, `mostrador`, `Camera`, `acabamento`
+  - `render.py` — `render` (paralelo + cópia celular), `folha_de_contato` (do código ou do mp4), `checagem_de_contato`
+  - `som.py` — instrumentos, `musica` (tema em 6 papéis), efeitos, `sussurro` (voz do vilão), `Mixagem` com `tabela`/`nivelar`
+- Próximo passo: o primeiro filme (prompt de ideia → história e linha do tempo).
 
 ## Ao terminar um filme
 Atualize `estilo.md`, `metodo.md` e `filmes.md` com o que aprendemos. Mantenha cada arquivo curto e não registre nada que só valha para aquele filme.

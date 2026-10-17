@@ -1,0 +1,38 @@
+0:00.0  Tema: quieto (início)
+0:07.7  Tema: quente (rotina)
+0:14.5  Tema: cansado (fundo do poço)
+0:23.1  Tema: abrindo (virada)
+0:28.9  Tema: luta (batidas)
+0:33.7  Tema: cheio (final)
+0:39.5  Violão
+0:42.3  Passos
+0:44.6  Respiração + expiração
+0:47.5  Batimento do coração
+0:50.4  Papel
+0:51.5  Amassar papel
+0:53.1  Lápis
+0:54.9  Clique
+0:55.7  Tique do mostrador
+0:56.6  Vidro quebrando
+0:58.6  Cerâmica quebrando
+1:00.2  Água
+1:02.5  Sala (silêncio de fundo)
+1:05.3  Chuva
+1:08.6  Rua
+1:11.9  Grilos
+1:15.2  Pássaros
+1:18.5  Conversa ao fundo
+1:21.8  Aplausos
+1:25.1  Whoosh
+1:26.4  Thud (pancada)
+1:27.8  Boom
+1:31.1  Subida (tensão)
+1:33.9  Cintilar (momento mágico)
+1:36.7  Drone de medo
+1:40.5  Prato
+1:44.3  Neon acendendo
+1:45.7  Neon zumbindo
+1:48.5  Neon apagando
+1:49.8  Voz do vilão: 'desiste.'
+1:53.2  Voz do vilão: 'só mais 5 minutos.'
+1:58.1  Voz do vilão: 'você não está pronto.'

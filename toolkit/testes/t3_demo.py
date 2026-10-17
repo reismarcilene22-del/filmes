@@ -40,6 +40,20 @@ def interruptor(c, ligado):
     return (x, y)
 
 
+def posicao(t):
+    """Onde o personagem esta e quanto ja andou (a trilha de som usa isto para os passos)."""
+    T = TEMPOS
+    x0, x1, x2 = -150, 820, 1080
+    a, b = T['entra']; a2, b2 = T['anda_ate_interruptor']
+    if t < b:
+        x = x0 + (x1 - x0) * entre(t, a, b)
+    elif t < a2:
+        x = x1
+    else:
+        x = x1 + (x2 - x1) * suave(entre(t, a2, b2))
+    return x, x - x0
+
+
 def desenhar(c, t):
     T = TEMPOS
     cena.fundo(c, luz=(900, 640))
@@ -52,16 +66,8 @@ def desenhar(c, t):
     ponto = interruptor(c, ligado=t < T['aperta'])
     cena.letreiro(c, 1560, 520, "desiste.", t, acende=T['vilao_acende'], apaga=T['aperta'])
 
-    # posicao do personagem
-    x0, x1, x2 = -150, 820, 1080
+    x, andou = posicao(t)
     a, b = T['entra']; a2, b2 = T['anda_ate_interruptor']
-    if t < b:
-        x = x0 + (x1 - x0) * entre(t, a, b)
-    elif t < a2:
-        x = x1
-    else:
-        x = x1 + (x2 - x1) * suave(entre(t, a2, b2))
-    andou = x - x0
     pose = pg.Pose(x, CHAO, 1.0, respiracao=__import__('math').sin(t * 2.2))
     for ini, fim in ((a, b), (a2, b2)):
         if ini <= t < fim:
