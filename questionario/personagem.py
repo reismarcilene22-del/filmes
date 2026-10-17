@@ -4,8 +4,17 @@ import skia
 W, H = 1920, 1080
 BODY = (238, 232, 220); LINE = (150, 140, 190); DARK = (20, 14, 36)
 
-def P(col, a=255): return skia.Paint(Color=skia.Color(*col, a), AntiAlias=True)
-def S(col, w): return skia.Paint(Color=skia.Color(*col), AntiAlias=True, Style=skia.Paint.kStroke_Style, StrokeWidth=w, StrokeCap=skia.Paint.kRound_Cap)
+# When set, every shape is drawn through this effect (used for the hand-drawn "line boil").
+EFEITO = None
+
+def P(col, a=255):
+    p = skia.Paint(Color=skia.Color(*col, a), AntiAlias=True)
+    if EFEITO is not None: p.setPathEffect(EFEITO)
+    return p
+def S(col, w):
+    p = skia.Paint(Color=skia.Color(*col), AntiAlias=True, Style=skia.Paint.kStroke_Style, StrokeWidth=w, StrokeCap=skia.Paint.kRound_Cap)
+    if EFEITO is not None: p.setPathEffect(EFEITO)
+    return p
 def glow(c, x, y, r, col, a=110):
     p = skia.Paint(AntiAlias=True)
     p.setShader(skia.GradientShader.MakeRadial((x, y), r, [skia.Color(*col, a), skia.Color(*col, 0)])); c.drawCircle(x, y, r, p)
