@@ -22,12 +22,13 @@ def personagem(c, x, ground, s=1.0):
     m = skia.Path(); m.moveTo(x - 18 * s, head_y + 36 * s); m.quadTo(x, head_y + 50 * s, x + 18 * s, head_y + 36 * s)
     c.drawPath(m, S(DARK, 6 * s))
 
-surface = skia.Surface(W, H)
-with surface as c:
-    c.clear(skia.Color(14, 10, 28))
-    glow(c, 320, 320, 340, (70, 55, 120)); glow(c, 1640, 300, 300, (50, 70, 120))
-    c.drawRect(skia.Rect(220, 280, 420, 360), S((70, 55, 120), 8))
-    c.drawLine(0, 920, W, 920, skia.Paint(Color=skia.Color(70, 55, 120), StrokeWidth=6))
-    glow(c, 960, 600, 460, (255, 240, 220), 40)
-    personagem(c, 960, 920)
-surface.makeImageSnapshot().save('questionario/3_personagem_escolhido.png', skia.kPNG)
+if __name__ == "__main__":
+    surface = skia.Surface(W, H)
+    with surface as c:
+        c.clear(skia.Color(14, 10, 28))
+        glow(c, 320, 320, 340, (70, 55, 120)); glow(c, 1640, 300, 300, (50, 70, 120))
+        c.drawRect(skia.Rect(220, 280, 420, 360), S((70, 55, 120), 8))
+        c.drawLine(0, 920, W, 920, skia.Paint(Color=skia.Color(70, 55, 120), StrokeWidth=6))
+        glow(c, 960, 600, 460, (255, 240, 220), 40)
+        personagem(c, 960, 920)
+    surface.makeImageSnapshot().save('questionario/3_personagem_escolhido.png', skia.kPNG)
