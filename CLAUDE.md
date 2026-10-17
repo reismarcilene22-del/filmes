@@ -21,7 +21,10 @@ A dona do projeto não é programadora e fala português: explicar tudo em palav
   - `cena.py` — fundo neon, placas, `letreiro` (vilão), `legenda`, `mostrador`, `Camera`, `acabamento`
   - `render.py` — `render` (paralelo + cópia celular), `folha_de_contato` (do código ou do mp4), `checagem_de_contato`
   - `som.py` — instrumentos, `musica` (tema em 6 papéis), efeitos, `sussurro` (voz do vilão), `Mixagem` com `tabela`/`nivelar`
-- Próximo passo: o primeiro filme (prompt de ideia → história e linha do tempo).
+- Filme em andamento: **ZERO.** em `filmes/zero/` — roteiro aprovado em `roteiro.md`, tempos em `tempos.py`, cenas em `filme.py`.
+  - Comandos (rodar dentro de `filmes/zero/`): `../../.venv/bin/python filme.py folha A B` (folha de contato), `... previa A B` (vídeo de um trecho), `... contato` (checagem de contato).
+  - Cenas 1 e 2 (0:00–0:17) feitas; prévia enviada, aguardando a opinião dela (ritmo das contas a cada 1,6 s; se ele deve fazer algum gesto).
+  - Próximo: cena 3 (a irmãzinha e a promessa da praia). Som só depois de todas as cenas aprovadas.
 
 ## Ao terminar um filme
 Atualize `estilo.md`, `metodo.md` e `filmes.md` com o que aprendemos. Mantenha cada arquivo curto e não registre nada que só valha para aquele filme.
