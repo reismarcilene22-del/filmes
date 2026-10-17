@@ -19,18 +19,19 @@ FONTE = 'Comic Neue'
 
 def P(cor, a=255):
     """Pincel de preenchimento."""
-    return skia.Paint(Color=skia.Color(*cor, int(a)), AntiAlias=True)
+    return skia.Paint(Color=skia.Color(*(int(v) for v in cor), int(a)), AntiAlias=True)
 
 
 def S(cor, largura, a=255):
     """Pincel de contorno, com pontas arredondadas."""
-    return skia.Paint(Color=skia.Color(*cor, int(a)), AntiAlias=True, Style=skia.Paint.kStroke_Style,
+    return skia.Paint(Color=skia.Color(*(int(v) for v in cor), int(a)), AntiAlias=True, Style=skia.Paint.kStroke_Style,
                       StrokeWidth=largura, StrokeCap=skia.Paint.kRound_Cap, StrokeJoin=skia.Paint.kRound_Join)
 
 
 def brilho(c, x, y, raio, cor, a=110):
     """Uma mancha de luz suave (lampada, letreiro, foco)."""
     p = skia.Paint(AntiAlias=True)
+    cor = tuple(int(v) for v in cor)
     p.setShader(skia.GradientShader.MakeRadial((x, y), raio, [skia.Color(*cor, int(a)), skia.Color(*cor, 0)]))
     c.drawCircle(x, y, raio, p)
 

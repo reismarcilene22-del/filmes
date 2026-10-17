@@ -24,13 +24,18 @@ def quadro(desenhar, t):
     return cena.acabamento(cena.para_rgb(s))
 
 
+_INICIO = [0.0]
+
+
 def _trabalho(n):
-    return quadro(_DESENHAR[0], n / FPS).tobytes()
+    return quadro(_DESENHAR[0], _INICIO[0] + n / FPS).tobytes()
 
 
-def render(desenhar, duracao, saida, audio=None, processos=None, celular=True):
-    """Desenha todos os quadros em paralelo e entrega ao ffmpeg. Gera tambem uma copia 720p para celular."""
+def render(desenhar, duracao, saida, audio=None, processos=None, celular=True, inicio=0.0):
+    """Desenha todos os quadros em paralelo e entrega ao ffmpeg. Gera tambem uma copia 720p para celular.
+    inicio: para renderizar so um trecho (previa de uma cena), de `inicio` ate `inicio + duracao`."""
     _DESENHAR[0] = desenhar
+    _INICIO[0] = inicio
     total = int(round(duracao * FPS))
     cmd = ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-"]
     if audio:
@@ -56,8 +61,9 @@ def folha_de_contato(desenhar, inicio, fim, saida, n=12, de_video=None):
     """12 quadros de um trecho numa imagem so (4 x 3), cada um com o seu tempo.
     de_video: caminho de um mp4 pronto, para conferir o arquivo final em vez do codigo."""
     colunas, linhas = 4, 3
-    w, h = W // colunas, H // linhas
-    folha = skia.Surface(W, H + 60)
+    w = W // colunas
+    h = w * H // W                        # mesma proporcao do video: nada fica esticado
+    folha = skia.Surface(W, 60 + h * linhas)
     fim = fim - 1.5 / FPS   # um pouco antes do fim: o ultimo quadro existente
     tempos = [inicio + (fim - inicio) * i / (n - 1) for i in range(n)]
     with folha as g:

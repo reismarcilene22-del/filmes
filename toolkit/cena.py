@@ -56,7 +56,7 @@ def letreiro(c, x, y, texto, t, acende=None, apaga=None, tamanho=78):
         luz *= 0.93 + 0.07 * math.sin(t * 47) * math.sin(t * 13)   # zumbido de neon
     # tubo apagado
     c.drawRRect(caixa, S((48, 34, 56), 8))
-    c.drawString(texto, x - f.measureText(texto) / 2, y + tamanho * 0.32, f, P((30, 22, 42)))
+    c.drawString(texto, x - f.measureText(texto) / 2, y + tamanho * 0.32, f, P((21, 15, 33)))   # apagado: quase invisivel
     if luz > 0:
         brilho(c, x, y, larg * 0.85, VERMELHO, 120 * luz)
         c.drawRRect(caixa, S(VERMELHO, 8, 255 * luz))
